@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday, My Love 💕</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Great+Vibes&family=Marck+Script&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-pink: #fcedf2;
+      --card-bg: #ffffff;
+      --text-dark: #3a2e39;
+      --text-muted: #8c7885;
+      --primary-pink: #ff6584;
+      --soft-pink: #ffd6e0;
+      --border-pink: #f7d6e0;
+      --shadow-pink: 0 12px 35px rgba(255, 101, 132, 0.12);
+      --romantic-red: #e63956;
+      --gold-accent: #ffb703;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-pink);
+      color: var(--text-dark);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 15px;
+      overflow-x: hidden;
+      transition: background-color 0.8s ease;
+      position: relative;
+    }
+
+    body.dark-mode {
+      background-color: #1e1420;
+      color: #fff;
+    }
+
+    body.dark-mode .title-cursive { color: #fff; }
+
+    /* FLOATING ROMANTIC BACKGROUND HEARTS */
+    .bg-hearts {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .bg-heart {
+      position: absolute;
+      color: rgba(255, 101, 132, 0.25);
+      font-size: 1.5rem;
+      user-select: none;
+      animation: floatUp 8s linear infinite;
+    }
+
+    .bg-heart:nth-child(1) { left: 10%; animation-duration: 9s; animation-delay: 0s; }
+    .bg-heart:nth-child(2) { left: 25%; animation-duration: 7s; animation-delay: 2s; font-size: 2rem; }
+    .bg-heart:nth-child(3) { left: 70%; animation-duration: 10s; animation-delay: 1s; }
+    .bg-heart:nth-child(4) { left: 85%; animation-duration: 8s; animation-delay: 3s; font-size: 1.8rem; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(105vh) scale(0.8) rotate(0deg); opacity: 0; }
+      20% { opacity: 0.8; }
+      100% { transform: translateY(-10vh) scale(1.2) rotate(40deg); opacity: 0; }
+    }
+
+    /* PASSWORD OVERLAY */
+    .pass-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-pink);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .pass-card {
+      background: #ffffff;
+      padding: 32px 24px;
+      border-radius: 24px;
+      box-shadow: var(--shadow-pink);
+      border: 1px solid var(--border-pink);
+      width: 100%;
+      max-width: 330px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pass-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--soft-pink);
+      border-radius: 16px;
+      outline: none;
+      font-size: 1rem;
+      text-align: center;
+      margin: 15px 0 10px;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    .pass-input:focus { border-color: var(--primary-pink); }
+
+    .pass-error {
+      color: var(--romantic-red);
+      font-size: 0.85rem;
+      margin-top: 10px;
+      min-height: 20px;
+      font-weight: 600;
+    }
+
+    .app-viewport {
+      width: 100%;
+      max-width: 440px;
+      min-height: 580px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+
+    /* Step Transitions */
+    .step-screen {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      animation: zoomIn 0.4s ease forwards;
+    }
+
+    .step-screen.active { display: flex; }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .title-cursive {
+      font-family: 'Caveat', cursive;
+      font-size: 2.5rem;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+      line-height: 1.2;
+      transition: color 0.8s ease;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .btn-pink {
+      background: var(--primary-pink);
+      color: #fff;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(255, 101, 132, 0.3);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-pink:hover {
+      transform: translateY(-2deg);
+      box-shadow: 0 8px 22px rgba(255, 101, 132, 0.4);
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: var(--primary-pink);
+      border: 2px solid var(--primary-pink);
+      padding: 10px 28px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    /* STEP 1: ROMANTIC LANDING PAGE */
+    .landing-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    .title-animated {
+      color: var(--romantic-red);
+      font-size: 3.4rem;
+      margin-top: -5px;
+      text-align: center;
+      display: block;
+      text-shadow: 0 4px 15px rgba(230, 57, 86, 0.15);
+    }
+
+    .landing-tagline {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.7rem;
+      color: var(--primary-pink);
+      margin-bottom: 4px;
+    }
+
+    .landing-couple-card {
+      position: relative;
+      margin: 8px 0 18px;
+      padding: 10px;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(255, 101, 132, 0.2);
+      border: 2px solid var(--border-pink);
+      width: 100%;
+      max-width: 290px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .landing-couple-card::after {
+      content: '💖';
+      position: absolute;
+      top: -12px;
+      right: -10px;
+      font-size: 1.4rem;
+      background: #fff;
+      border-radius: 50%;
+      padding: 3px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .landing-couple-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 18px;
+      display: block;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      width: 100%;
+      position: relative;
+      min-height: 50px;
+    }
+
+    /* STEP 2: ANIMATED BALLOONS */
+    .balloon-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+      margin: 20px 0 30px;
+      width: 260px;
+      position: relative;
+    }
+
+    .balloon-wrapper {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: floatBalloon 3s infinite ease-in-out;
+    }
+
+    .balloon-wrapper:nth-child(1) { animation-delay: 0s; }
+    .balloon-wrapper:nth-child(2) { animation-delay: 0.7s; }
+    .balloon-wrapper:nth-child(3) { animation-delay: 0.3s; }
+    .balloon-wrapper:nth-child(4) { animation-delay: 1s; }
+
+    @keyframes floatBalloon {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(4deg); }
+    }
+
+    .balloon {
+      font-size: 4rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.3s ease;
+      user-select: none;
+      filter: drop-shadow(0 10px 15px rgba(255, 101, 132, 0.25));
+    }
+
+    .balloon:hover {
+      transform: scale(1.2) rotate(-5deg);
+      filter: drop-shadow(0 12px 20px rgba(255, 101, 132, 0.4));
+    }
+
+    .balloon.popped {
+      animation: popAnim 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.27) forwards;
+      pointer-events: none;
+    }
+
+    @keyframes popAnim {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.8; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    .revealed-message {
+      font-family: 'Caveat', cursive;
+      font-size: 2.4rem;
+      min-height: 55px;
+      color: var(--primary-pink);
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* STEP 3: ENHANCED BEAUTIFUL CAKE */
+    .cake-container { 
+      margin: 15px 0 25px; 
+      position: relative; 
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .cake-svg-wrapper {
+      width: 240px;
+      height: 220px;
+      position: relative;
+      filter: drop-shadow(0 15px 25px rgba(255, 101, 132, 0.25));
+    }
+
+    .candle-flame-group {
+      transition: opacity 0.4s ease;
+    }
+
+    .candle-flame-group.off { 
+      opacity: 0; 
+      pointer-events: none; 
+    }
+
+    .flame-anim {
+      transform-origin: center bottom;
+      animation: flameWiggle 0.6s infinite alternate ease-in-out;
+    }
+
+    .smoke-particles {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .candle-flame-group.off ~ .smoke-particles {
+      animation: riseSmoke 1.6s ease-out forwards;
+    }
+
+    @keyframes riseSmoke {
+      0% { opacity: 0.9; transform: translate(-50%, 0) scale(0.8); }
+      100% { opacity: 0; transform: translate(-50%, -50px) scale(2.2); filter: blur(4px); }
+    }
+
+    @keyframes flameWiggle {
+      0% { transform: scale(1) rotate(-3deg); }
+      100% { transform: scale(1.15) rotate(3deg); }
+    }
+
+    /* STEP 4: QUIZ */
+    .quiz-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 22px 18px;
+      box-shadow: var(--shadow-pink);
+      border: 1px solid var(--border-pink);
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .quiz-img-frame {
+      width: 100%;
+      max-width: 280px;
+      height: 140px;
+      border-radius: 16px;
+      margin: 5px 0 14px;
+      overflow: hidden;
+      background: #fff5f8;
+      border: 1px solid var(--soft-pink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quiz-img-frame svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .quiz-question {
+      font-family: 'Caveat', cursive;
+      font-size: 1.8rem;
+      color: var(--romantic-red);
+      margin-bottom: 12px;
+      line-height: 1.25;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      width: 100%;
+    }
+
+    .quiz-opt-btn {
+      background: #fffdfd;
+      border: 1.5px solid var(--soft-pink);
+      color: var(--text-dark);
+      padding: 10px 16px;
+      border-radius: 16px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quiz-opt-btn:hover {
+      border-color: var(--primary-pink);
+      background: #fff5f7;
+      transform: translateX(3px);
+    }
+
+    .quiz-opt-btn.selected {
+      background: var(--primary-pink);
+      color: #fff;
+      border-color: var(--primary-pink);
+    }
+
+    .quiz-feedback {
+      margin-top: 12px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.4rem;
+      color: var(--primary-pink);
+      min-height: 28px;
+    }
+
+    /* STEP 5: SCRATCH CARD & REAL FLOWER PHOTO */
+    .scratch-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 350px;
+      margin: 0 auto 25px auto;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(255, 101, 132, 0.18);
+    }
+
+    #scratchCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      cursor: pointer;
+      touch-action: none;
+      transition: opacity 0.6s ease;
+    }
+
+    .bouquet-surprise-container {
+      background: linear-gradient(135deg, #fffcf8 0%, #faeef1 100%);
+      padding: 24px 20px;
+      border: 1px solid var(--border-pink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border-radius: 24px;
+    }
+
+    .flower-photo-wrapper {
+      width: 100%;
+      max-height: 240px;
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 25px rgba(230, 57, 86, 0.2);
+      border: 2px solid #fff;
+    }
+
+    .flower-real-img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .flower-photo-wrapper:hover .flower-real-img {
+      transform: scale(1.05);
+    }
+
+    .bouquet-msg-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.8rem;
+      color: var(--primary-pink);
+      margin-bottom: 2px;
+      line-height: 1;
+    }
+
+    .bouquet-msg-sub {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem;
+      color: #63505c;
+      font-weight: 600;
+    }
+
+    /* STEP 5.5: STYLISH MUSIC PLAYER */
+    .music-card-integrated {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 240, 245, 0.85));
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 28px;
+      border: 1.5px solid rgba(255, 182, 193, 0.5);
+      box-shadow: 0 20px 40px rgba(255, 101, 132, 0.15);
+      padding: 24px 20px;
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .song-cover-static {
+      width: 170px;
+      height: 170px;
+      border-radius: 22px;
+      object-fit: cover;
+      box-shadow: 0 10px 25px rgba(255, 101, 132, 0.25);
+      margin-bottom: 14px;
+    }
+
+    .song-title {
+      color: var(--text-dark);
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      margin-bottom: 2px;
+    }
+
+    .artist-name {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+
+    .custom-player-ui {
+      width: 100%;
+      background: #ffffff;
+      padding: 14px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--border-pink);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
+      margin-bottom: 18px;
+    }
+
+    .player-progress-container {
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: #f0d6de;
+      border-radius: 10px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-pink), var(--romantic-red));
+      border-radius: 10px;
+      transition: width 0.1s linear;
+    }
+
+    .time-stamps {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .play-pause-btn {
+      background: linear-gradient(135deg, var(--primary-pink), var(--romantic-red));
+      color: #fff;
+      border: none;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(230, 57, 86, 0.35);
+      transition: transform 0.2s ease;
+    }
+
+    .play-pause-btn:hover { transform: scale(1.08); }
+
+    .volume-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .volume-slider {
+      width: 70px;
+      accent-color: var(--primary-pink);
+      cursor: pointer;
+    }
+
+    .lyrics-box {
+      width: 100%;
+      max-height: 140px;
+      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--soft-pink);
+      border-radius: 16px;
+      padding: 14px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.3rem;
+      color: #523b49;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .lyrics-box p { margin-bottom: 12px; }
+
+    /* STEP 6 */
+    .stack-container {
+      width: 260px;
+      height: 330px;
+      position: relative;
+      margin: 20px 0 30px;
+    }
+
+    .polaroid-card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      padding: 12px 12px 20px 12px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      border: 1px solid #f0e4e8;
+      cursor: pointer;
+      transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .polaroid-card img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    .polaroid-card .caption {
+      font-family: 'Caveat', cursive;
+      font-size: 1.4rem;
+      color: var(--text-dark);
+    }
+
+    .polaroid-card:nth-child(1) { transform: rotate(-3deg); z-index: 3; }
+    .polaroid-card:nth-child(2) { transform: rotate(2deg); z-index: 2; }
+    .polaroid-card:nth-child(3) { transform: rotate(-1deg); z-index: 1; }
+
+    .polaroid-card.swiped {
+      transform: translateX(120%) rotate(20deg) !important;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* STEP 7: HANDWRITING LETTER */
+    .envelope-wrapper {
+      width: 280px;
+      height: 180px;
+      background: #fdf0f4;
+      border: 2px solid #f2c2ce;
+      border-radius: 16px;
+      margin: 30px 0;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(230, 57, 86, 0.12);
+    }
+
+    .envelope-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-left: 140px solid transparent;
+      border-right: 140px solid transparent;
+      border-top: 100px solid #f9d8e2;
+    }
+
+    .heart-badge {
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      background: var(--romantic-red);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 1.1rem;
+      z-index: 2;
+      box-shadow: 0 4px 12px rgba(230, 57, 86, 0.4);
+      animation: pulseHeart 1.5s infinite;
+    }
+
+    @keyframes pulseHeart {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    .tap-hint {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--romantic-red);
+      margin-top: 100px;
+      text-transform: uppercase;
+    }
+
+    .letter-paper {
+      background: #fffdfd;
+      border-radius: 18px;
+      padding: 26px 22px;
+      border: 1px solid var(--border-pink);
+      box-shadow: var(--shadow-pink);
+      text-align: left;
+      width: 100%;
+      max-width: 360px;
+      display: none;
+      animation: zoomIn 0.5s ease forwards;
+    }
+
+    .letter-paper h3 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.3rem;
+      margin-bottom: 12px;
+      color: var(--romantic-red);
+      min-height: 40px;
+    }
+
+    .letter-paper .animated-text-container {
+      font-family: 'Marck Script', cursive;
+      font-size: 1.3rem;
+      line-height: 1.65;
+      color: #3d2b38;
+      min-height: 180px;
+    }
+
+    .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.2rem;
+      background-color: var(--romantic-red);
+      margin-left: 2px;
+      animation: blinkCursor 0.7s infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blinkCursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* STEP 8 */
+    .coupon-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 350px;
+      margin: 15px 0 25px 0;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .coupon-card {
+      background: #ffffff;
+      border: 2px dashed var(--primary-pink);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .coupon-card.redeemed {
+      background: #fff0f3;
+      border-style: solid;
+      border-color: #25a062;
+    }
+
+    .coupon-text { text-align: left; }
+
+    .coupon-text h4 {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .coupon-text p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .coupon-btn {
+      background: var(--primary-pink);
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .coupon-card.redeemed .coupon-btn {
+      background: #25a062;
+      cursor: default;
+    }
+
+    /* STEP 9 */
+    .heart-reveal-btn {
+      font-size: 6rem;
+      margin: 35px 0;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      position: relative;
+      display: inline-block;
+      animation: heartBeat 1.2s infinite ease-in-out;
+      filter: drop-shadow(0 10px 20px rgba(230, 57, 86, 0.3));
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.15); }
+      40% { transform: scale(1); }
+      60% { transform: scale(1.1); }
+    }
+
+    /* STEP 10 */
+    .final-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 32px 22px;
+      box-shadow: 0 15px 40px rgba(230, 57, 86, 0.15);
+      border: 1px solid var(--border-pink);
+      width: 100%;
+      max-width: 360px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .love-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3.8rem;
+      color: var(--romantic-red);
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .love-sub {
+      font-family: 'Caveat', cursive;
+      font-size: 1.7rem;
+      color: var(--text-dark);
+      margin-bottom: 18px;
+    }
+
+    .romantic-quote {
+      font-family: 'Marck Script', cursive;
+      font-size: 1.2rem;
+      color: #634b5c;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .final-gif {
+      width: 100%;
+      max-height: 180px;
+      object-fit: contain;
+      border-radius: 16px;
+      margin-bottom: 22px;
+    }
+
+    .replay-btn {
+      background: #fdf0f4;
+      color: var(--romantic-red);
+      border: 1px solid #f2c2ce;
+      padding: 10px 24px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FLOATING BACKGROUND HEARTS -->
+  <div class="bg-hearts">
+    <div class="bg-heart">🌸</div>
+    <div class="bg-heart">💕</div>
+    <div class="bg-heart">✨</div>
+    <div class="bg-heart">💖</div>
+  </div>
+
+  <!-- PASSWORD OVERLAY -->
+  <div id="passwordOverlay" class="pass-overlay">
+    <div class="pass-card">
+      <h2 class="title-cursive" style="font-size: 2.2rem; color: var(--romantic-red);">🔒 Strictly Secret</h2>
+      <p class="subtitle" style="margin-bottom: 10px;">Enter the passcode to enter</p>
+      
+      <input type="password" id="passInput" class="pass-input" placeholder="Enter password..." onkeyup="if(event.key==='Enter') verifyPassword()">
+      <button class="btn-pink" style="width: 100%;" onclick="verifyPassword()">Unlock 💕</button>
+      <div id="passError" class="pass-error"></div>
+    </div>
+  </div>
+
+  <div class="app-viewport">
+
+    <!-- STEP 1: ROMANTIC LANDING PAGE -->
+    <div id="step1" class="step-screen active">
+
+      <div class="landing-header">
+        <p class="landing-tagline">To My Favorite Human ✨</p>
+        <h1 class="title-cursive">Happy Birthday</h1>
+        <h1 class="title-cursive title-animated">AISHA</h1>
+      </div>
+      
+      <!-- ROMANTIC COUPLE IMAGE / GIF FRAME -->
+      <div class="landing-couple-card">
+        <img src="https://media.tenor.com/7nkPhBs1tWMAAAAi/4.gif" alt="Romantic Couple Moment" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&auto=format&fit=crop&q=80'">
+      </div>
+
+      <p class="subtitle" style="margin-bottom: 18px; font-size: 0.95rem; color: #6e5968;">
+        Ready to unwrap your special surprises? 💌
+      </p>
+      
+      <div class="btn-group">
+        <button class="btn-pink" onclick="goToStep(2)">
+          Yes, Let's Start! 💕
+        </button>
+        <button class="btn-outline" id="noBtn" onmouseover="displaceNoBtn()" onclick="displaceNoBtn()" ontouchstart="displaceNoBtn()">
+          No
+        </button>
+      </div>
+
+    </div>
+
+    <!-- STEP 2: ANIMATED BALLOONS -->
+    <div id="step2" class="step-screen">
+      <h1 class="title-cursive">Pop all 4 balloons 💕</h1>
+      <p class="subtitle" style="margin-bottom: 10px;">A secret romantic phrase is hidden inside...</p>
+      <div class="revealed-message" id="balloonMsg"></div>
+
+      <div class="balloon-grid">
+        <div class="balloon-wrapper">
+          <div class="balloon" onclick="popBalloon(this, 'You')">🎈</div>
+        </div>
+        <div class="balloon-wrapper">
+          <div class="balloon" onclick="popBalloon(this, 'Are')">🎈</div>
+        </div>
+        <div class="balloon-wrapper">
+          <div class="balloon" onclick="popBalloon(this, 'So')">🎈</div>
+        </div>
+        <div class="balloon-wrapper">
+          <div class="balloon" onclick="popBalloon(this, 'Special')">🎈</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: ENHANCED BEAUTIFUL BIRTHDAY CAKE -->
+    <div id="step3" class="step-screen">
+      <h1 class="title-cursive" id="candleTitle">Blow out the candle, AISHA 🎂</h1>
+      
+      <div class="cake-container" onclick="blowCandle()">
+        <div class="cake-svg-wrapper">
+          <svg viewBox="0 0 240 220" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <!-- Cake Stand -->
+            <ellipse cx="120" cy="205" rx="100" ry="12" fill="#e2b6c1"/>
+            <ellipse cx="120" cy="202" rx="90" ry="10" fill="#ffffff"/>
+            <path d="M 105 202 L 135 202 L 130 215 L 110 215 Z" fill="#d8a4b1"/>
+
+            <!-- Bottom Tier -->
+            <rect x="35" y="140" width="170" height="60" rx="12" fill="#ff8fa3"/>
+            <!-- Bottom Frosting Layer -->
+            <path d="M 35 140 Q 52 155 68 140 Q 85 155 102 140 Q 118 155 135 140 Q 152 155 168 140 Q 185 155 205 140 L 205 152 Q 185 167 168 152 Q 152 167 135 152 Q 118 167 102 152 Q 85 167 68 152 Q 52 167 35 152 Z" fill="#ffffff"/>
+            <!-- Heart Decor on Bottom Layer -->
+            <circle cx="70" cy="175" r="5" fill="#ffffff"/>
+            <circle cx="120" cy="175" r="5" fill="#ffffff"/>
+            <circle cx="170" cy="175" r="5" fill="#ffffff"/>
+
+            <!-- Top Tier -->
+            <rect x="60" y="85" width="120" height="55" rx="10" fill="#ffb3c1"/>
+            <!-- Top Frosting Drips -->
+            <path d="M 60 85 Q 75 100 90 85 Q 105 100 120 85 Q 135 100 150 85 Q 165 100 180 85 L 180 96 Q 165 111 150 96 Q 135 111 120 96 Q 105 111 90 96 Q 75 111 60 96 Z" fill="#ffffff"/>
+
+            <!-- Cream Swirls on Top -->
+            <circle cx="75" cy="83" r="7" fill="#ffffff"/>
+            <circle cx="105" cy="83" r="7" fill="#ffffff"/>
+            <circle cx="135" cy="83" r="7" fill="#ffffff"/>
+            <circle cx="165" cy="83" r="7" fill="#ffffff"/>
+
+            <!-- Birthday Candle -->
+            <rect x="114" y="45" width="12" height="38" rx="3" fill="#fffdf0" stroke="#ff8fa3" stroke-width="2"/>
+            <!-- Candle Stripes -->
+            <line x1="114" y1="55" x2="126" y2="52" stroke="#ff8fa3" stroke-width="2"/>
+            <line x1="114" y1="67" x2="126" y2="64" stroke="#ff8fa3" stroke-width="2"/>
+
+            <!-- Candle Flame Group -->
+            <g class="candle-flame-group" id="flameGroup">
+              <!-- Glow -->
+              <circle cx="120" cy="30" r="16" fill="#ffb703" opacity="0.3"/>
+              <!-- Flame Outer -->
+              <path class="flame-anim" d="M 120 18 Q 128 28 120 40 Q 112 28 120 18 Z" fill="#ff9f43"/>
+              <!-- Flame Inner -->
+              <path class="flame-anim" d="M 120 24 Q 124 30 120 38 Q 116 30 120 24 Z" fill="#ffee55"/>
+            </g>
+
+            <!-- Smoke Group -->
+            <g class="smoke-particles">
+              <ellipse cx="120" cy="25" rx="6" ry="12" fill="rgba(255,255,255,0.7)"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <button class="btn-pink" id="candleBtn" onclick="blowCandle()">✨ Tap to blow candle</button>
+      <p id="wishText" class="title-cursive" style="display: none; color: var(--primary-pink); margin-top: 15px;">Close your eyes & make a wish 💕</p>
+    </div>
+
+    <!-- STEP 4: EXPANDED 5-QUESTION LOVE QUIZ WITH SVG ILLUSTRATIONS -->
+    <div id="step4" class="step-screen">
+      <h1 class="title-cursive"> Quiz For You 💕</h1>
+      <p class="subtitle" id="quizStepCounter">Question 1 of 5</p>
+
+      <div class="quiz-card">
+        <!-- Embedded High Quality Vector Artwork Frame -->
+        <div class="quiz-img-frame" id="quizImgFrame">
+          <!-- Dynamically Injected SVG Content -->
+        </div>
+
+        <h3 id="quizQuestion" class="quiz-question">What is your absolute favorite food date?</h3>
+        
+        <div id="quizOptions" class="quiz-options"></div>
+        <div id="quizFeedback" class="quiz-feedback"></div>
+      </div>
+    </div>
+
+    <!-- STEP 5: SCRATCH CARD & REAL FLOWER PHOTO -->
+    <div id="step5" class="step-screen">
+      <h1 class="title-cursive">Scratch your surprise! ✨</h1>
+      <p class="subtitle" style="margin-bottom: 12px;">Rub the surface with your finger/mouse</p>
+
+      <div class="scratch-wrapper" id="scratchWrapper">
+        <canvas id="scratchCanvas"></canvas>
+
+        <div class="bouquet-surprise-container">
+          <div class="flower-photo-wrapper">
+            <img src="images/rose-bouquet.jpg" alt="A Beautiful Bouquet of Roses" class="flower-real-img" onerror="this.src='https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=600&auto=format&fit=crop&q=80'">
+          </div>
+
+          <h2 class="bouquet-msg-title">For You 🌹</h2>
+          <p class="bouquet-msg-sub">A gorgeous real bouquet for my love!</p>
+        </div>
+      </div>
+
+      <button class="btn-pink" onclick="goToStep(5.5)"> A Song For You 🎵</button>
+    </div>
+
+    <!-- STEP 5.5: STYLISH ELEGANT MUSIC PLAYER -->
+    <div id="step5_5" class="step-screen">
+      <h1 class="title-cursive">Our  Song 💕</h1>
+      <p class="subtitle" style="margin-bottom: 15px;">Dedicated especially to you...</p>
+
+      <div class="music-card-integrated">
+        <img class="song-cover-static" src="/images/a1.jpeg" alt="Her Photo">
+        <h2 class="song-title">Our Favorite Song</h2>
+        <p class="artist-name">For My Forever Love</p>
+
+        <audio id="mainAudio">
+          <source src='/images/aisha.mpeg' type="audio/mpeg">
+        </audio>
+
+        <div class="custom-player-ui">
+          <div class="player-progress-container">
+            <div class="progress-bar-bg" id="progressBarBg" onclick="seekAudio(event)">
+              <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+            <div class="time-stamps">
+              <span id="currentTimeText">0:00</span>
+              <span id="durationTimeText">0:00</span>
+            </div>
+          </div>
+
+          <div class="player-controls">
+            <button class="play-pause-btn" id="playPauseBtn" onclick="togglePlayPause()">▶</button>
+            <div class="volume-box">
+              <span style="font-size: 0.9rem;">🔊</span>
+              <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)">
+            </div>
+          </div>
+        </div>
+
+        <div class="lyrics-box">
+          <p>
+            I found a love for me
+Darling, just dive right in and follow my lead
+Well, I found a girl, beautiful and sweet
+Oh, I never knew you were the someone waitin' for me
+'Cause we were just kids when we fell in love, not knowin' what it was
+I will not give you up this time
+Darling, just kiss me slow, your heart is all I own
+And in your eyes, you're holding mine
+Baby, I'm dancin' in the dark with you between my arms
+Barefoot on the grass, listenin' to our favourite song
+When you said you looked a mess, I whispered underneath my breath
+But you heard it, "Darling, you look perfect tonight"
+Well, I found a woman, stronger than anyone I know
+She shares my dreams, I hope that someday, I'll share her home
+I found a love to carry more than just my secrets
+To carry love, to carry children of our own
+We are still kids, but we're so in love, fighting against all odds
+I know we'll be alright this time
+Darling, just hold my hand, be my girl, I'll be your man
+I see my future in your eyes
+Baby, I'm dancin' in the dark with you between my arms
+Barefoot on the grass, listenin' to our favourite song
+When I saw you in that dress, lookin' so beautiful
+I don't deserve this, darling, you look perfect tonight
+No, no, no
+Mm-hm
+Baby, I'm dancin' in the dark with you between my arms
+Barefoot on the grass, listenin' to our favourite song
+I have faith in what I see, now I know I have met
+An angel in person, and she looks perfect
+I don't deserve this, you look perfect tonight
+          </p>
+        </div>
+      </div>
+
+      <button class="btn-pink" style="margin-top: 18px;" onclick="goToStep(6)">See Sweet Moments →</button>
+    </div>
+
+    <!-- STEP 6: SWEET MOMENTS -->
+    <div id="step6" class="step-screen">
+      <h1 class="title-cursive">Some Sweet Moments</h1>
+      <p class="subtitle" style="margin-bottom: 10px;">(Swipe/Tap cards away)</p>
+
+      <div class="stack-container">
+        <div class="polaroid-card" onclick="swipeCard(this)">
+          <img src="/images/a2.jpeg" alt="Moment 1">
+          <div class="caption">Happy Birthday! 🎂</div>
+        </div>
+        <div class="polaroid-card" onclick="swipeCard(this)">
+          <img src="/images/a3.jpeg" alt="Moment 2">
+          <div class="caption">Celebrating you 💐</div>
+        </div>
+        <div class="polaroid-card" onclick="swipeCard(this)">
+          <img src="/images/a1.jpeg" alt="Moment 3">
+          <div class="caption">Make a wish ✨</div>
+        </div>
+      </div>
+
+      <button class="btn-pink" id="nextMomentsBtn" style="display: none;" onclick="goToStep(7)">Read My Letter →</button>
+    </div>
+
+    <!-- STEP 7: LIVE HANDWRITTEN LOVE LETTER -->
+    <div id="step7" class="step-screen">
+      <h1 class="title-cursive">A Love Letter For You</h1>
+
+      <div class="envelope-wrapper" id="envelopeObj" onclick="openLetter()">
+        <div class="heart-badge">♥</div>
+        <div class="tap-hint">TAP TO UNLOCK MY HEART</div>
+      </div>
+
+      <div class="letter-paper" id="letterPaper">
+        <h3 id="letterHeader"></h3>
+        <div class="animated-text-container">
+          <span >My dear,
+Sometimes I wonder how one person can become such an important part of my thoughts without even realizing it. Since you became a part of my life, I’ve started looking forward to the future in a completely different way.
+I don't promise that everything will always be perfect. But I promise that I’ll always value you, respect you, listen to you, and try to make you smile whenever I can.
+I want us to grow together—not just as a couple, but as two people who support each other's dreams, learn from each other, and make beautiful memories along the way.
+There are still so many things we have to learn about each other, and honestly, that's one of the things I’m most excited about. ❤️
+Until then, just remember one thing:
+You have a very special place in my heart, and I’m grateful that our paths crossed.
+With lots of prayers and good wishes for our future,
+Yours always, 
+❤️</span><span class="typing-cursor" id="typingCursor"></span>
+        </div>
+        
+        <button class="btn-pink" id="letterNextBtn" style="width: 100%; margin-top: 20px; background: var(--romantic-red); opacity: 0; transition: opacity 0.5s ease; pointer-events: none;" onclick="goToStep(8)">Claim Birthday Coupons 🎟️</button>
+      </div>
+    </div>
+
+    <!-- STEP 8: LOVE COUPONS -->
+    <div id="step8" class="step-screen">
+      <h1 class="title-cursive">Birthday Coupon Book 🎟️</h1>
+      <p class="subtitle">Valid forever & non-refundable!</p>
+
+      <div class="coupon-grid">
+        <div class="coupon-card">
+          <div class="coupon-text">
+            <h4>1x Warm Infinite Hug 🤗</h4>
+            <p>Redeemable anytime you need warmth.</p>
+          </div>
+          <button class="coupon-btn" onclick="redeemCoupon(this)">Redeem</button>
+        </div>
+
+        <div class="coupon-card">
+          <div class="coupon-text">
+            <h4>Late Night Ice Cream Run 🍦</h4>
+            <p>No questions asked, any flavor.</p>
+          </div>
+          <button class="coupon-btn" onclick="redeemCoupon(this)">Redeem</button>
+        </div>
+
+        <div class="coupon-card">
+          <div class="coupon-text">
+            <h4>You Win Any Argument 👑</h4>
+            <p>Pass to immediately win one debate.</p>
+          </div>
+          <button class="coupon-btn" onclick="redeemCoupon(this)">Redeem</button>
+        </div>
+
+        <div class="coupon-card">
+          <div class="coupon-text">
+            <h4>Romantic Candlelight Date 🕯️</h4>
+            <p>I organize & pay for everything!</p>
+          </div>
+          <button class="coupon-btn" onclick="redeemCoupon(this)">Redeem</button>
+        </div>
+
+        <div class="coupon-card">
+          <div class="coupon-text">
+            <h4>15-Min Relaxing Foot Massage 💆‍♀️</h4>
+            <p>Unwind after a long tiring day.</p>
+          </div>
+          <button class="coupon-btn" onclick="redeemCoupon(this)">Redeem</button>
+        </div>
+
+        <div class="coupon-card">
+          <div class="coupon-text">
+            <h4>Unlimited Movie & Snack Night 🍿</h4>
+            <p>You pick the movie, I get the snacks.</p>
+          </div>
+          <button class="coupon-btn" onclick="redeemCoupon(this)">Redeem</button>
+        </div>
+      </div>
+
+      <button class="btn-pink" onclick="goToStep(9)">One Last Thing... ❤️</button>
+    </div>
+
+    <!-- STEP 9 -->
+    <div id="step9" class="step-screen">
+      <h1 class="title-cursive">Tap the beating heart</h1>
+      <p class="subtitle">Listen to what my heart wants to say...</p>
+
+      <div class="heart-reveal-btn" onclick="revealLove()">
+        💖
+      </div>
+    </div>
+
+    <!-- STEP 10 -->
+    <div id="step10" class="step-screen">
+      <div class="final-card">
+        <h1 class="love-title">I Love You!</h1>
+        <h2 class="love-sub">Happy Birthday, My Love 🌎❤️</h2>
+        
+        <p class="romantic-quote">
+          "If I had a flower for every time I thought of you, I could walk through my garden forever."
+        </p>
+
+        <img src="https://media1.tenor.com/m/6oVpxIFwAAoAAAAC/cat-kiss.gif" class="final-gif" alt="Cute Romantic GIF" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&auto=format&fit=crop&q=80'">
+
+        <button class="replay-btn" onclick="goToStep(1)">
+          <span>↺</span> Relive the magic
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* PASSWORD VERIFICATION */
+    const SECRET_PASSWORD = "aisha"; 
+
+    function verifyPassword() {
+      const userEntered = document.getElementById('passInput').value.trim().toLowerCase();
+      const errorElement = document.getElementById('passError');
+
+      if (userEntered === SECRET_PASSWORD.toLowerCase()) {
+        const overlay = document.getElementById('passwordOverlay');
+        overlay.style.transition = 'opacity 0.5s ease';
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 500);
+      } else {
+        errorElement.innerText = "Wrong passcode! Hint: Your name 💕";
+        document.getElementById('passInput').value = '';
+      }
+    }
+
+    function goToStep(stepNum) {
+      if (stepNum !== 3) {
+        document.body.classList.remove('dark-mode');
+      }
+
+      document.querySelectorAll('.step-screen').forEach(el => el.classList.remove('active'));
+      
+      const targetId = (stepNum === 5.5) ? 'step5_5' : 'step' + stepNum;
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) targetEl.classList.add('active');
+
+      if (stepNum === 4) {
+        currentQuizIndex = 0;
+        loadQuizQuestion();
+      }
+
+      if (stepNum === 5) {
+        initSmoothScratchCard();
+      }
+
+      if (stepNum === 1) {
+        resetAllSteps();
+      }
+    }
+
+    function displaceNoBtn() {
+      const btn = document.getElementById('noBtn');
+      const maxX = window.innerWidth - btn.offsetWidth - 40;
+      const maxY = window.innerHeight - btn.offsetHeight - 40;
+
+      const randomX = Math.max(20, Math.floor(Math.random() * maxX));
+      const randomY = Math.max(20, Math.floor(Math.random() * maxY));
+
+      btn.style.position = 'fixed';
+      btn.style.left = randomX + 'px';
+      btn.style.top = randomY + 'px';
+      btn.style.zIndex = '9999';
+    }
+
+    function resetAllSteps() {
+      const noBtn = document.getElementById('noBtn');
+      if (noBtn) {
+        noBtn.style.position = 'relative';
+        noBtn.style.left = 'auto';
+        noBtn.style.top = 'auto';
+      }
+
+      poppedCount = 0;
+      msgArray = [];
+      document.getElementById('balloonMsg').innerText = '';
+      document.querySelectorAll('.balloon').forEach(b => b.classList.remove('popped'));
+
+      candleBlown = false;
+      document.body.classList.remove('dark-mode');
+      document.getElementById('flameGroup').classList.remove('off');
+      document.getElementById('candleBtn').style.display = 'inline-flex';
+      document.getElementById('wishText').style.display = 'none';
+
+      swipedCards = 0;
+      document.querySelectorAll('.polaroid-card').forEach(c => c.classList.remove('swiped'));
+      document.getElementById('nextMomentsBtn').style.display = 'none';
+
+      document.getElementById('envelopeObj').style.display = 'flex';
+      document.getElementById('letterPaper').style.display = 'none';
+      if (letterTimer) clearInterval(letterTimer);
+
+      document.querySelectorAll('.coupon-card').forEach(c => c.classList.remove('redeemed'));
+      document.querySelectorAll('.coupon-btn').forEach(b => {
+        b.innerText = 'Redeem';
+        b.disabled = false;
+      });
+      
+      const canvas = document.getElementById('scratchCanvas');
+      if(canvas) {
+        canvas.style.opacity = '1';
+        canvas.style.pointerEvents = 'auto';
+      }
+    }
+
+    /* STEP 2: BALLOONS LOGIC */
+    let poppedCount = 0;
+    let msgArray = [];
+
+    function popBalloon(element, word) {
+      if (element.classList.contains('popped')) return;
+      
+      element.classList.add('popped');
+      msgArray.push(word);
+      document.getElementById('balloonMsg').innerText = msgArray.join(' ');
+      
+      confetti({
+        particleCount: 40,
+        spread: 70,
+        origin: { y: 0.5 },
+        colors: ['#ff6584', '#e63956', '#ffd6e0', '#ffffff']
+      });
+
+      poppedCount++;
+
+      if (poppedCount === 4) {
+        setTimeout(() => { goToStep(3); }, 1400);
+      }
+    }
+
+    /* STEP 3: CANDLE LOGIC */
+    let candleBlown = false;
+    function blowCandle() {
+      if (candleBlown) return;
+      candleBlown = true;
+      
+      document.getElementById('flameGroup').classList.add('off');
+      document.body.classList.add('dark-mode');
+      document.getElementById('candleBtn').style.display = 'none';
+      document.getElementById('wishText').style.display = 'block';
+
+      confetti({ particleCount: 90, spread: 70, origin: { y: 0.5 } });
+
+      setTimeout(() => { 
+        document.body.classList.remove('dark-mode');
+        goToStep(4); 
+      }, 2500);
+    }
+
+    /* STEP 4: 5 ROMANTIC COUPLE QUIZZES WITH SVG ARTWORK */
+    const quizData = [
+      {
+        question: "What is your absolute favorite food date? 🍕",
+        svg: `<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="120" fill="#fff0f3"/><path d="M 40 90 L 100 20 L 160 90 Z" fill="#ffb703"/><path d="M 32 90 Q 100 105 168 90" stroke="#d48c00" stroke-width="12" stroke-linecap="round" fill="none"/><circle cx="85" cy="55" r="8" fill="#e63956"/><circle cx="115" cy="70" r="8" fill="#e63956"/><circle cx="100" cy="40" r="7" fill="#e63956"/></svg>`,
+        options: ["Cheesy Pizza & Movie Night 🍕", "Romantic Candlelight Dinner 🍝", "Late Night Ice Cream Drive 🍦", "Street Food Hopping 🥟"],
+        reactions: ["Yummm! Best date ever! 🍕", "Ooh fancy! Sounds perfect! ✨", "Late night ice cream is top tier! 🍦", "Foodie adventures together! ❤️"]
+      },
+      {
+        question: "Who is more likely to fall asleep during a movie? 😴",
+        svg: `<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="120" fill="#f4effa"/><path d="M 50 85 Q 100 45 150 85" stroke="#705294" stroke-width="16" stroke-linecap="round" fill="none"/><circle cx="100" cy="45" r="18" fill="#ff8fa3"/><text x="145" y="35" font-size="22" fill="#705294" font-weight="bold">Zzz...</text></svg>`,
+        options: ["Definitely You! 😴", "100% Me! 🙈", "Both of us within 15 mins! 💤", "Neither, we stay awake! 🎬"],
+        reactions: ["Haha caught red-handed! 😂", "Aww cozy sleepyhead! 💖", "Double nap time it is! 😴", "Movie marathon champions! 🏆"]
+      },
+      {
+        question: "What is our ultimate #CoupleGoal? 💍",
+        svg: `<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="120" fill="#fff5f7"/><path d="M 20 80 Q 60 20 100 80 T 180 80" stroke="#ff8fa3" stroke-width="4" fill="none"/><polygon points="100,25 108,45 130,45 112,58 118,78 100,65 82,78 88,58 70,45 92,45" fill="#ffb703"/></svg>`,
+        options: ["Traveling the world together ✈️", "Building a cozy dream home 🏡", "Laughing at stupid jokes forever 🤣", "All of the above! 💖"],
+        reactions: ["Pack your bags! World tour coming up ✈️", "Home is wherever I'm with you! 🏡", "Laughs are guaranteed forever! 😂", "YES! All of it together! ❤️"]
+      },
+      {
+        question: "What is my favorite thing about you? 🥰",
+        svg: `<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="120" fill="#fff0f5"/><path d="M 100 85 C 100 85 50 55 50 35 C 50 20 65 10 80 15 C 90 18 97 26 100 30 C 103 26 110 18 120 15 C 135 10 150 20 150 35 C 150 55 100 85 100 85 Z" fill="#e63956"/></svg>`,
+        options: ["Your cute adorable smile 😁", "Your warm & caring heart 💖", "Your funny playful mood 🤪", "Everything about you! ✨"],
+        reactions: ["Your smile lights up my entire world! 😁", "You have the sweetest soul ever! 💖", "You always make my day brighter! 🤪", "You're 100% perfect to me! ❤️"]
+      },
+      {
+        question: "Where should we go for our next big trip? 🌴",
+        svg: `<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="120" fill="#eef9ff"/><path d="M 0 90 Q 50 75 100 90 T 200 90 L 200 120 L 0 120 Z" fill="#ffb703"/><circle cx="160" cy="35" r="18" fill="#ff9f43"/><path d="M 50 90 Q 65 50 80 20" stroke="#52b788" stroke-width="6" fill="none"/><path d="M 80 20 Q 50 15 35 25" stroke="#2d6a4f" stroke-width="4" fill="none"/><path d="M 80 20 Q 110 15 125 25" stroke="#2d6a4f" stroke-width="4" fill="none"/></svg>`,
+        options: ["Cozy Peaceful Mountain Cabin 🏔️", "Sunny Romantic Beach Resort 🏖️", "Historic European City Tour 🏰", "Anywhere as long as we're together 💕"],
+        reactions: ["Mountain air & warm hugs! 🏔️", "Sun, sand & hand in hand! 🏖️", "Fairy-tale vacation mode! 🏰", "My favorite place is right beside you! 💕"]
+      }
+    ];
+
+    let currentQuizIndex = 0;
+
+    function loadQuizQuestion() {
+      const q = quizData[currentQuizIndex];
+      document.getElementById('quizStepCounter').innerText = `Question ${currentQuizIndex + 1} of ${quizData.length}`;
+      document.getElementById('quizImgFrame').innerHTML = q.svg;
+      document.getElementById('quizQuestion').innerText = q.question;
+      document.getElementById('quizFeedback').innerText = '';
+
+      const container = document.getElementById('quizOptions');
+      container.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-opt-btn';
+        btn.innerHTML = opt;
+        btn.onclick = () => selectQuizAnswer(idx);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectQuizAnswer(optionIdx) {
+      const q = quizData[currentQuizIndex];
+      const buttons = document.querySelectorAll('.quiz-opt-btn');
+      
+      buttons.forEach((btn, idx) => {
+        if (idx === optionIdx) btn.classList.add('selected');
+        btn.disabled = true;
+      });
+
+      document.getElementById('quizFeedback').innerText = q.reactions[optionIdx];
+
+      setTimeout(() => {
+        currentQuizIndex++;
+        if (currentQuizIndex < quizData.length) {
+          loadQuizQuestion();
+        } else {
+          goToStep(5);
+        }
+      }, 1400);
+    }
+
+    /* STEP 5: CANVAS SCRATCH CARD */
+    function initSmoothScratchCard() {
+      const canvas = document.getElementById('scratchCanvas');
+      const wrapper = document.getElementById('scratchWrapper');
+      if (!canvas || !wrapper) return;
+
+      const ctx = canvas.getContext('2d');
+      const rect = wrapper.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const grad = ctx.createLinearGradient(0, 0, rect.width, rect.height);
+      grad.addColorStop(0, '#ffd6e0');
+      grad.addColorStop(0.5, '#f7aef8');
+      grad.addColorStop(1, '#ffb7c5');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, rect.width, rect.height);
+
+      ctx.fillStyle = '#a8326b';
+      ctx.font = 'bold 20px "Caveat", cursive';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('✨ Scratch to reveal your gift 💕', rect.width / 2, rect.height / 2);
+
+      let isDrawing = false;
+      let lastPoint = null;
+
+      function getPos(e) {
+        const bounds = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - bounds.left,
+          y: clientY - bounds.top
+        };
+      }
+
+      function scratchPath(pt1, pt2) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.lineWidth = 45;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        ctx.beginPath();
+        if (pt1) {
+          ctx.moveTo(pt1.x, pt1.y);
+          ctx.lineTo(pt2.x, pt2.y);
+        } else {
+          ctx.arc(pt2.x, pt2.y, 22.5, 0, Math.PI * 2);
+        }
+        ctx.stroke();
+      }
+
+      function handleStart(e) {
+        isDrawing = true;
+        lastPoint = getPos(e);
+        scratchPath(null, lastPoint);
+      }
+
+      function handleMove(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+        const currentPoint = getPos(e);
+        scratchPath(lastPoint, currentPoint);
+        lastPoint = currentPoint;
+        checkScratchProgress();
+      }
+
+      function handleEnd() {
+        isDrawing = false;
+        lastPoint = null;
+      }
+
+      let checkThrottle = false;
+      function checkScratchProgress() {
+        if (checkThrottle) return;
+        checkThrottle = true;
+
+        setTimeout(() => {
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          let cleared = 0;
+          for (let i = 3; i < imgData.data.length; i += 32) {
+            if (imgData.data[i] === 0) cleared++;
+          }
+          if ((cleared / (imgData.data.length / 32)) > 0.45) {
+            canvas.style.opacity = '0';
+            canvas.style.pointerEvents = 'none';
+            confetti({ particleCount: 70, spread: 80, origin: { y: 0.5 } });
+          }
+          checkThrottle = false;
+        }, 100);
+      }
+
+      canvas.addEventListener('mousedown', handleStart);
+      canvas.addEventListener('mousemove', handleMove);
+      window.addEventListener('mouseup', handleEnd);
+
+      canvas.addEventListener('touchstart', handleStart, { passive: false });
+      canvas.addEventListener('touchmove', handleMove, { passive: false });
+      window.addEventListener('touchend', handleEnd);
+    }
+
+    /* STEP 5.5: CUSTOM MUSIC PLAYER CONTROLS */
+    const audio = document.getElementById('mainAudio');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const progressBarFill = document.getElementById('progressBarFill');
+    const currentTimeText = document.getElementById('currentTimeText');
+    const durationTimeText = document.getElementById('durationTimeText');
+
+    function togglePlayPause() {
+      if (audio.paused) {
+        audio.play();
+        playPauseBtn.innerText = '⏸';
+      } else {
+        audio.pause();
+        playPauseBtn.innerText = '▶';
+      }
+    }
+
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "0:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        const progressPercent = (audio.currentTime / audio.duration) * 100;
+        progressBarFill.style.width = progressPercent + '%';
+        currentTimeText.innerText = formatTime(audio.currentTime);
+        durationTimeText.innerText = formatTime(audio.duration);
+      }
+    });
+
+    audio.addEventListener('loadedmetadata', () => {
+      durationTimeText.innerText = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('ended', () => {
+      playPauseBtn.innerText = '▶';
+      progressBarFill.style.width = '0%';
+    });
+
+    function seekAudio(e) {
+      const progressBarBg = document.getElementById('progressBarBg');
+      const rect = progressBarBg.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      if (audio.duration) {
+        audio.currentTime = (clickX / width) * audio.duration;
+      }
+    }
+
+    function changeVolume(val) {
+      audio.volume = val;
+    }
+
+    /* STEP 6: POLAROID SWIPE */
+    let swipedCards = 0;
+    function swipeCard(card) {
+      if (card.classList.contains('swiped')) return;
+      card.classList.add('swiped');
+      swipedCards++;
+
+      if (swipedCards >= 3) {
+        document.getElementById('nextMomentsBtn').style.display = 'inline-flex';
+      }
+    }
+
+    /* STEP 7: ANIMATED LIVE HANDWRITING LETTER */
+    const letterHeaderContent = "My Dearest AISHA,";
+    const letterBodyContent = "From the moment you entered my life, every single day has been brighter, warmer, and endlessly happier. 🌸\n\nYour smile is my favorite view, your voice is my favorite sound, and your heart is my favorite place in the whole world.\n\nThank you for being my rock, my secret keeper, and my absolute best friend.\n\nForever & Always Yours,\nYour Love ❤️";
+
+    let letterTimer = null;
+
+    function openLetter() {
+      document.getElementById('envelopeObj').style.display = 'none';
+      const paper = document.getElementById('letterPaper');
+      paper.style.display = 'block';
+
+      const headerEl = document.getElementById('letterHeader');
+      const bodyEl = document.getElementById('letterBody');
+      const cursor = document.getElementById('typingCursor');
+      const nextBtn = document.getElementById('letterNextBtn');
+
+      headerEl.innerText = letterHeaderContent;
+      bodyEl.innerText = "";
+      cursor.style.display = "inline-block";
+      nextBtn.style.opacity = "0";
+      nextBtn.style.pointerEvents = "none";
+
+      let index = 0;
+      if (letterTimer) clearInterval(letterTimer);
+
+      letterTimer = setInterval(() => {
+        if (index < letterBodyContent.length) {
+          bodyEl.innerText += letterBodyContent.charAt(index);
+          index++;
+        } else {
+          clearInterval(letterTimer);
+          cursor.style.display = "none";
+          nextBtn.style.opacity = "1";
+          nextBtn.style.pointerEvents = "auto";
+        }
+      }, 40);
+    }
+
+    /* STEP 8: LOVE COUPONS */
+    function redeemCoupon(btn) {
+      const card = btn.closest('.coupon-card');
+      card.classList.add('redeemed');
+      btn.innerText = 'Redeemed! ✨';
+      btn.disabled = true;
+    }
+
+    /* STEP 9 & 10: HEART REVEAL */
+    function revealLove() {
+      confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.5 },
+        colors: ['#e63956', '#ff6584', '#ffd6e0']
+      });
+
+      setTimeout(() => { goToStep(10); }, 500);
+    }
+  </script>
+</body>
+</html>
